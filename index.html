@@ -83,7 +83,8 @@ function updateTotal(){const price=Number(showSel.selectedOptions[0].dataset.pri
   const note=encodeURIComponent('THE BULLPEN table booking');
   venmoPay.href=`https://venmo.com/u/Michael-Smith-6711?txn=pay&amount=${total}&note=${note}`;
 }
-showSel.addEventListener('change',updateTotal); tablesSel.addEventListener('change',updateTotal); updateTotal();
+showSel.addEventListener('change', updateTotal);
+showSel.addEventListener('change', updateTableCounter);
 document.getElementById('vendorForm').addEventListener('submit', e => {
   e.preventDefault();
 
@@ -126,7 +127,8 @@ const BOOKING_API =
   "https://script.google.com/macros/s/AKfycbyfON6AioTORRAVxYlmJudmbKNesxwF_oWvfEMn1jJHdwMBjbzxe33ydt49BV2tFVjSkA/exec";
 
 function updateTableCounter() {
-  fetch(BOOKING_API)
+const selectedShow = document.getElementById("vShow").value;
+fetch(BOOKING_API + "?show=" + encodeURIComponent(selectedShow))
     .then(response => response.json())
     .then(data => {
       const tablesLeft = document.getElementById("tablesLeft");
