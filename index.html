@@ -84,15 +84,42 @@ function updateTotal(){const price=Number(showSel.selectedOptions[0].dataset.pri
   venmoPay.href=`https://venmo.com/u/Michael-Smith-6711?txn=pay&amount=${total}&note=${note}`;
 }
 showSel.addEventListener('change',updateTotal); tablesSel.addEventListener('change',updateTotal); updateTotal();
-document.getElementById('vendorForm').addEventListener('submit',e=>{e.preventDefault(); const payment=document.getElementById('paymentMethod').value; if(!payment){alert('Please choose the payment method you used.'); return;} const show=showSel.options[showSel.selectedIndex].text; const qty=tablesSel.value; const price=Number(showSel.selectedOptions[0].dataset.price); const total=price*Number(qty); const subject=encodeURIComponent('THE BULLPEN PAID Table Booking — '+show.split(' — ')[0]); const body=encodeURIComponent(`Name: ${document.getElementById('vName').value}
-Email: ${document.getElementById('vEmail').value}
-Phone: ${document.getElementById('vPhone').value}
-Show: ${show}
-Tables: ${qty}
-Total: $${total}
-Payment Method: ${payment}
-Selling: ${document.getElementById('vInventory').value}
-Please confirm payment and table availability.`); window.location.href=`mailto:thebullpencardshows@gmail.com?subject=${subject}&body=${body}`;});
+document.getElementById('vendorForm').addEventListener('submit', e => {
+  e.preventDefault();
+
+  const payment = document.getElementById('payment').value;
+  const show = document.getElementById('vShow').value;
+  const qty = Number(document.getElementById('vTables').value);
+  const total = Number(showSel.selectedOptions[0].dataset.price || 60) * qty;
+
+  const booking = {
+    name: document.getElementById('vName').value,
+    email: document.getElementById('vEmail').value,
+    phone: document.getElementById('vPhone').value,
+    show: show,
+    tables: qty,
+    total: total,
+    payment: payment,
+    selling: document.getElementById('vInventory').value
+  };
+
+  fetch(BOOKING_API, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify(booking)
+  })
+  .then(() => {
+    alert('🎃 Booking request received! The Bullpen will confirm your table.');
+    updateTableCounter();
+  })
+  .catch(error => {
+    console.error('Booking error:', error);
+    alert('There was a problem sending your booking. Please try again.');
+  });
+});
 </script>
 <script>
 const BOOKING_API =
