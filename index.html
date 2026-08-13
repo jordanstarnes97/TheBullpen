@@ -39,7 +39,14 @@ footer{border-top:1px solid #242b33;padding:35px 0;color:var(--muted)}
 <div><span class="kicker">SPORTS CARDS • POKÉMON • TCG • COLLECTIBLES</span><h1>GET IN<br><span class="red">THE GAME.</span></h1><p>THE BULLPEN brings collectors, dealers and families together for high-energy card shows across North Carolina. Buy. Sell. Trade. Chase the next grail.</p><div class="actions"><a class="btn primary" href="#vendors">🔥 BOOK A TABLE</a><a class="btn secondary" href="#shows">VIEW SHOWS</a></div></div>
 <div class="logo"><img src="bullpen-logo.jpeg" alt="THE BULLPEN Card Shows"></div>
 </section>
-
+<div class="table-counter">
+  <div class="table-counter-label">🔥 TABLES FILLING FAST</div>
+  <div class="table-counter-number">
+    <span id="tablesLeft">--</span>
+    <span class="table-counter-total">TABLES LEFT</span>
+  </div>
+  <div class="table-counter-sub">Reserve your table before they're gone!</div>
+</div>
 <div class="countdown">
 <div class="countdown-top"><div><div class="label">NEXT SHOW</div><h2>🎃 HALLOWEEN CARD SHOW — OCTOBER 31</h2></div><a class="btn primary" href="#halloween">SEE DETAILS</a></div>
 <div class="timer"><div class="timebox"><div class="num" id="days">--</div><div class="unit">DAYS</div></div><div class="timebox"><div class="num" id="hours">--</div><div class="unit">HOURS</div></div><div class="timebox"><div class="num" id="mins">--</div><div class="unit">MINUTES</div></div><div class="timebox"><div class="num" id="secs">--</div><div class="unit">SECONDS</div></div></div>
@@ -86,5 +93,27 @@ Total: $${total}
 Payment Method: ${payment}
 Selling: ${document.getElementById('vInventory').value}
 Please confirm payment and table availability.`); window.location.href=`mailto:thebullpencardshows@gmail.com?subject=${subject}&body=${body}`;});
+</script>
+<script>
+const BOOKING_API =
+  "https://script.google.com/macros/s/AKfycbyfON6AioTORRAVxYlmJudmbKNesxwF_oWvfEMn1jJHdwMBjbzxe33ydt49BV2tFVjSkA/exec";
+
+function updateTableCounter() {
+  fetch(BOOKING_API)
+    .then(response => response.json())
+    .then(data => {
+      const tablesLeft = document.getElementById("tablesLeft");
+
+      if (tablesLeft && data.tablesLeft !== undefined) {
+        tablesLeft.textContent = data.tablesLeft;
+      }
+    })
+    .catch(error => {
+      console.error("Table counter error:", error);
+    });
+}
+
+updateTableCounter();
+setInterval(updateTableCounter, 30000);
 </script>
 </body></html>
