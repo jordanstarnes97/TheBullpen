@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cards Coming to The Bullpen</title>
+
+<style>
+:root{
+  --bg:#050608;
+  --panel:#0e1218;
+  --panel2:#151a22;
+  --red:#ef2027;
+  --gold:#ffc943;
+  --white:#f7f8fa;
+  --muted:#a8a8b8;
+  --line:#29313b;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(239,32,39,.20),transparent 35%),
+    radial-gradient(circle at 80% 10%,rgba(255,201,67,.12),transparent 30%),
+    var(--bg);
+  color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.wrap{
+  max-width:1180px;
+  margin:auto;
+  padding:20px;
+}
+
+.nav{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(5,6,8,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+
+.nav-inner{
+  max-width:1180px;
+  margin:auto;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.brand span{
+  color:var(--red);
+}
+
+.nav a{
+  font-weight:800;
+  font-size:14px;
+  margin-left:18px;
+}
+
+.hero{
+  text-align:center;
+  padding:70px 20px 45px;
+}
+
+.kicker{
+  color:var(--gold);
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+h1{
+  font-size:clamp(42px,8vw,82px);
+  line-height:.95;
+  margin:15px 0;
+  text-shadow:0 5px 25px rgba(239,32,39,.3);
+}
+
+.hero p{
+  max-width:700px;
+  margin:0 auto;
+  color:var(--muted);
+  font-size:18px;
+}
+
+.search-area{
+  max-width:800px;
+  margin:30px auto;
+}
+
+.search{
+  width:100%;
+  padding:18px 20px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:white;
+  font-size:17px;
+  outline:none;
+}
+
+.search:focus{
+  border-color:var(--red);
+}
+
+.filters{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:20px 0;
+}
+
+.filter{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:white;
+  padding:10px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.filter.active,
+.filter:hover{
+  background:var(--red);
+  border-color:var(--red);
+}
+
+.show-banner{
+  background:linear-gradient(135deg,#151a22,#0b0e13);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+  margin:30px 0;
+}
+
+.show-banner strong{
+  color:var(--gold);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.card{
+  background:linear-gradient(145deg,#151a22,#0b0e13);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--red);
+  box-shadow:0 10px 35px rgba(239,32,39,.16);
+}
+
+.card-image{
+  height:270px;
+  background:
+    linear-gradient(135deg,#191d25,#090b0f);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#777;
+  font-weight:800;
+  text-align:center;
+  padding:20px;
+}
+
+.card-body{
+  padding:16px;
+}
+
+.card-body h3{
+  margin:0 0 8px;
+  font-size:19px;
+}
+
+.details{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
+
+.price{
+  color:var(--gold);
+  font-size:21px;
+  font-weight:900;
+  margin-top:10px;
+}
+
+.vendor{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  font-size:14px;
+}
+
+.vendor strong{
+  color:white;
+}
+
+.table{
+  color:var(--red);
+  font-weight:900;
+}
+
+.empty{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--muted);
+  display:none;
+}
+
+.submit{
+  margin:70px 0 30px;
+  background:linear-gradient(135deg,rgba(239,32,39,.18),rgba(255,201,67,.08));
+  border:1px solid var(--red);
+  border-radius:20px;
+  padding:35px;
+  text-align:center;
+}
+
+.submit h2{
+  margin-top:0;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:15px;
+  padding:14px 22px;
+  border-radius:12px;
+  font-weight:900;
+  background:linear-gradient(135deg,#ef2027,#b70f15);
+}
+
+.back{
+  display:inline-block;
+  margin-top:15px;
+  color:var(--muted);
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:560px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .nav a{
+    margin-left:8px;
+    font-size:12px;
+  }
+
+  .hero{
+    padding-top:45px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      🔥 <span>THE BULLPEN</span>
+    </div>
+
+    <div>
+      <a href="index.html">HOME</a>
+      <a href="#submit">POST CARDS</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+
+  <div class="kicker">🔥 THE NEXT BULLPEN CARD SHOW 🔥</div>
+
+  <h1>CARDS COMING<br>TO THE BULLPEN</h1>
+
+  <p>
+    See what our vendors are bringing before you walk through the doors.
+    Find the cards you're hunting for and know exactly who to find at the show.
+  </p>
+
+  <div class="search-area">
+    <input
+      id="search"
+      class="search"
+      type="text"
+      placeholder="🔎 Search player, card, Pokémon, vendor..."
+    >
+  </div>
+
+  <div class="filters">
+    <button class="filter active" data-filter="all">ALL</button>
+    <button class="filter" data-filter="baseball">⚾ BASEBALL</button>
+    <button class="filter" data-filter="football">🏈 FOOTBALL</button>
+    <button class="filter" data-filter="basketball">🏀 BASKETBALL</button>
+    <button class="filter" data-filter="pokemon">🃏 POKÉMON</button>
+    <button class="filter" data-filter="tcg">🎴 TCG</button>
+    <button class="filter" data-filter="graded">💎 GRADED</button>
+  </div>
+
+</section>
+
+<main class="wrap">
+
+  <div class="show-banner">
+    <div>📅 <strong>OCTOBER 31, 2026</strong></div>
+    <div>🎃 Halloween Bullpen Card Show • Broyhill Center • Lenoir, NC</div>
+  </div>
+
+  <div id="cards" class="grid">
+
+    <!-- SAMPLE CARD -->
+    <article
+      class="card"
+      data-category="baseball graded"
+      data-search="Shohei Ohtani baseball 2025 Topps Chrome PSA 10 Slab Papi"
+    >
+      <div class="card-image">
+        CARD PHOTO<br>
+        <small>Vendor photo will appear here</small>
+      </div>
+
+      <div class="card-body">
+        <h3>Shohei Ohtani</h3>
+
+        <div class="details">
+          2025 Topps Chrome<br>
+          PSA 10 • Baseball
+        </div>
+
+        <div class="price">$175</div>
+
+        <div class="vendor">
+          Vendor: <strong>Slab Papi</strong><br>
+          <span class="table">📍 Table 24</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- SAMPLE CARD -->
+    <article
+      class="card"
+      data-category="basketball graded"
+      data-search="Victor Wembanyama basketball PSA graded"
+    >
+      <div class="card-image">
+        CARD PHOTO<br>
+        <small>Vendor photo will appear here</small>
+      </div>
+
+      <div class="card-body">
+        <h3>Victor Wembanyama</h3>
+
+        <div class="details">
+          Basketball Card<br>
+          PSA Graded
+        </div>
+
+        <div class="price">$250</div>
+
+        <div class="vendor">
+          Vendor: <strong>The Bullpen Vendor</strong><br>
+          <span class="table">📍 Table 12</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- SAMPLE CARD -->
+    <article
+      class="card"
+      data-category="pokemon"
+      data-search="Pokemon Charizard Pokemon TCG"
+    >
+      <div class="card-image">
+        CARD PHOTO<br>
+        <small>Vendor photo will appear here</small>
+      </div>
+
+      <div class="card-body">
+        <h3>Charizard</h3>
+
+        <div class="details">
+          Pokémon TCG<br>
+          Collectible Card
+        </div>
+
+        <div class="price">$100</div>
+
+        <div class="vendor">
+          Vendor: <strong>Pokémon Vendor</strong><br>
+          <span class="table">📍 Table 31</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div id="empty" class="empty">
+    <h2>😬 No cards found</h2>
+    <p>Try another player, card, Pokémon or vendor.</p>
+  </div>
+
+  <section id="submit" class="submit">
+
+    <h2>🔥 VENDORS — SHOW OFF YOUR CARDS!</h2>
+
+    <p>
+      Have a monster card, rare Pokémon, high-end slab or something
+      collectors need to see?
+    </p>
+
+    <p>
+      Soon you'll be able to upload your cards directly to this page.
+    </p>
+
+    <a class="btn" href="mailto:thebullpencardshows@gmail.com">
+      📸 VENDOR — GET YOUR CARDS ON THE SITE
+    </a>
+
+  </section>
+
+  <div style="text-align:center;">
+    <a class="back" href="index.html">← Back to The Bullpen</a>
+  </div>
+
+</main>
+
+<script>
+
+const search = document.getElementById("search");
+const cards = [...document.querySelectorAll(".card")];
+const empty = document.getElementById("empty");
+const filters = [...document.querySelectorAll(".filter")];
+
+let currentFilter = "all";
+
+function updateCards(){
+
+  const term = search.value.toLowerCase().trim();
+
+  let visible = 0;
+
+  cards.forEach(card => {
+
+    const text = card.dataset.search.toLowerCase();
+    const categories = card.dataset.category.toLowerCase();
+
+    const matchesSearch =
+      !term || text.includes(term);
+
+    const matchesFilter =
+      currentFilter === "all" ||
+      categories.includes(currentFilter);
+
+    const show =
+      matchesSearch && matchesFilter;
+
+    card.style.display = show ? "" : "none";
+
+    if(show) visible++;
+
+  });
+
+  empty.style.display =
+    visible === 0 ? "block" : "none";
+}
+
+search.addEventListener("input", updateCards);
+
+filters.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    filters.forEach(b =>
+      b.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    currentFilter =
+      button.dataset.filter;
+
+    updateCards();
+
+  });
+
+});
+
+</script>
+
+</body>
+</html>
